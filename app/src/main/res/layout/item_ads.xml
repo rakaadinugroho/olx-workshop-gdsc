@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:id="@+id/container_ads"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginTop="16dp"
+    app:cardCornerRadius="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_title_ads"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Honda Brio 2014"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_price_ads"
+            android:text="Rp12.000.000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:src="@android:drawable/ic_input_get"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+
+            <TextView
+                android:id="@+id/tv_location_ads"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingLeft="8dp"
+                android:text="Kembangan, Jakarta Barat"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/teal_700" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
