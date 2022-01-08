@@ -5,11 +5,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Ads(
-    val author: String,
-    val description: String,
-    val location: String,
-    val price: String,
-    val title: String
+    var author: String = "",
+    var description: String = "",
+    var location: String = "",
+    var price: String = "",
+    var title: String = ""
 ): Parcelable {
     companion object {
         fun generateDummyAds(): List<Ads> {

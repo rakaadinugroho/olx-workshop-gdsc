@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_createAdsFragment"
+            app:destination="@id/createAdsFragment" />
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
@@ -21,11 +24,13 @@
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
         <argument
             android:name="ads"
             app:argType="com.olx.android.models.Ads" />
     </fragment>
+    <fragment
+        android:id="@+id/createAdsFragment"
+        android:name="com.olx.android.CreateAdsFragment"
+        android:label="Create Ads"
+        tools:layout="@layout/fragment_create_ads" />
 </navigation>

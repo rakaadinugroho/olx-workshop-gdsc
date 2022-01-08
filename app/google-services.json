@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "410896973552",
+    "firebase_url": "https://suryanusantara-26c95.firebaseio.com",
+    "project_id": "suryanusantara-26c95",
+    "storage_bucket": "suryanusantara-26c95.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:410896973552:android:00c751ddab7c18b6e28c35",
+        "android_client_info": {
+          "package_name": "com.olx.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "410896973552-vpuo8ffbb65iedsu9opjaqaekn51d688.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2ezAXNriEfb3i55pWWszvPDKr8x2eYrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "410896973552-vpuo8ffbb65iedsu9opjaqaekn51d688.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
