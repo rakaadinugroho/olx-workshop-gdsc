@@ -326,8 +326,6 @@ in this case, we want to use just one `Activity`, and page will use `fragment`
            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
    </LinearLayout>
    ```
-   
-   
 
 2. in the detail page, you just need to show the data which passing from ads list, so you can consume the data from `Bundle` [[references](https://developer.android.com/reference/android/os/Bundle)]
 
@@ -341,7 +339,6 @@ in this case, we want to use just one `Activity`, and page will use `fragment`
    ```
    
    ```kotlin
-   
    @Parcelize
    data class Ads(
        var author: String = "",
@@ -402,7 +399,204 @@ in this case, we want to use just one `Activity`, and page will use `fragment`
            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, bundleOf("ads" to  ads))
        }
    ```
+
+##### Connect to Firebase
+
+1. simply you can use assistant feature in Android studio to connect your project with Firebase `tools -> firebase -> Realtime Database`
+
+2. firebase assistant will open on you sidebar, you just need to click `connect` to implement firebase in your project.
+
+3. create class to handle all of `database` transaction. Create `Database.kt` inside `utils/Database.kt` package
+   
+   ```kotlin
+   class Database {
+       private val path = "ads"
+   
+       private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
+   
+       private fun getReference(): DatabaseReference {
+           return database.getReference(path)
+       }
+   
+       // function to create new Ads
+       fun createAds(ads: Ads) {
+           getReference().push().setValue(ads)
+       }
+   
+       // function to read ads
+       fun readAds(onSuccess: (List<Ads>) -> (Unit), onError: (Any?) -> Unit) {
+           getReference().addValueEventListener(object : ValueEventListener{
+               override fun onDataChange(data: DataSnapshot) {
+                   val items = arrayListOf<Ads>()
+                   for (item: DataSnapshot in data.children) {
+                       val adsParser = item.getValue(Ads::class.java)
+                       items.add(adsParser!!)
+                   }
+                   onSuccess(items)
+               }
+   
+               override fun onCancelled(p0: DatabaseError) {
+                   onError(p0)
+               }
+           })
+       }
+   }
+   ```
+
+##### Create "Create Ads" page
+
+1. create new fragment (class and layout)
+
+2. `create_ads_fragment.xml`
+   
+   ```xml
+   <?xml version="1.0" encoding="utf-8"?>
+   <LinearLayout
+       android:orientation="vertical"
+       xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools"
+       android:padding="16dp"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       tools:context=".CreateAdsFragment">
+   
+       <androidx.appcompat.widget.AppCompatEditText
+           android:id="@+id/et_title"
+           android:hint="Title Ads"
+           android:layout_marginBottom="8dp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" />
+       <androidx.appcompat.widget.AppCompatEditText
+           android:id="@+id/et_author"
+           android:hint="Yourname"
+           android:layout_marginBottom="8dp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" />
+       <androidx.appcompat.widget.AppCompatEditText
+           android:id="@+id/et_price"
+           android:hint="Price"
+           android:layout_marginBottom="8dp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" />
+       <androidx.appcompat.widget.AppCompatEditText
+           android:id="@+id/et_location"
+           android:hint="Location"
+           android:layout_marginBottom="8dp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" />
+       <androidx.appcompat.widget.AppCompatEditText
+           android:id="@+id/et_desc"
+           android:hint="Description Ads"
+           android:lines="4"
+           android:layout_marginBottom="8dp"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" />
+   
+       <androidx.appcompat.widget.AppCompatButton
+           android:id="@+id/btn_save"
+           android:text="Save Ads"
+           android:textAllCaps="false"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"/>
+   </LinearLayout>
+   ```
+   
+   ![](assets/image_4.png)
+
+3. `CreateAdsFragment.kt`
+   
+   ```kotlin
+   class CreateAdsFragment : Fragment() {
+       private var _binding: FragmentCreateAdsBinding? = null
+       private val binding get() = _binding!!
+   
+       override fun onCreateView(
+           inflater: LayoutInflater, container: ViewGroup?,
+           savedInstanceState: Bundle?
+       ): View? {
+           // Inflate the layout for this fragment
+           _binding = FragmentCreateAdsBinding.inflate(inflater, container, false)
+           return binding.root
+       }
+   
+       override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+           super.onViewCreated(view, savedInstanceState)
+   
+           binding.btnSave.setOnClickListener {
+               // TODO : save item
+               val ads = Ads(
+                       author = binding.etAuthor.text.toString(),
+                       title = binding.etTitle.text.toString(),
+                       price = binding.etPrice.text.toString(),
+                       location = binding.etLocation.text.toString(),
+                       description = binding.etDesc.text.toString()
+                   )
+               
+           }
+   
+       }
+   
+       override fun onDestroyView() {
+           super.onDestroyView()
+           _binding = null
+       }
+   }
+   ```
    
    
 
+4. Add save functionality, you need to initialization the `Database.kt` to your fragment
+   
+   ```kotlin
+   private val database by lazy { Database() }
+   
+   
+   // modify save button
+   binding.btnSave.setOnClickListener {
+               // TODO : save item
+               val ads = Ads(
+                       author = binding.etAuthor.text.toString(),
+                       title = binding.etTitle.text.toString(),
+                       price = binding.etPrice.text.toString(),
+                       location = binding.etLocation.text.toString(),
+                       description = binding.etDesc.text.toString()
+                   )
+               database.createAds(ads)   
+           }
+   ```
 
+##### Load List Ads from Database
+
+modify your `firstFragment.kt`
+
+```kotlin
+private val database by lazy { Database() }
+
+
+
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    
+    binding.fabCreateAds.setOnClickListener {
+         findNavController().navigate(R.id.action_FirstFragment_to_createAdsFragment)
+    }
+}
+
+
+override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        database.readAds(
+            onError = { err ->
+                Toast.makeText(requireContext(), "Error: $err", Toast.LENGTH_SHORT).show()
+            } , onSuccess = { items ->
+                listOfAds.clear()
+                listOfAds.addAll(items)
+                adsAdapter.notifyDataSetChanged()
+            } )
+    }
+```
+
+
+
+### Result
+
+![](assets/preview.png)
